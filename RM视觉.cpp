@@ -13,201 +13,300 @@ protected:
 	char team;
 	int blood_vol;
 	bool dead_flag;
-
+	int heat;
+	int cur_heat;
+	char kind;
 public:
-	Robot(int n,char t,int b)
+	Robot(int n=0,char t='R',int b=100,int h=200,int ch=0,char k='B')
 	{
 		number=n;
 		team=t;
 		blood_vol=b;
 		dead_flag=0;
-	}
-};
+		heat=h;
+		cur_heat=ch;
+		kind=k;
 
-class B_robot:public Robot
-{
-protected:
-	int s_gun;
-	int cur_heat;
-public:
-	B_robot(int n,char t,int b=100,int s=200,int h=0):Robot(n,t,b),s_gun(s),cur_heat(h)
-	{
-		cout<<"ÒÑ´´½¨";
-		cout<<(t='R') ? "ºì·½":"À¶·½";
-		cout<<n<<"ºÅ²½±ø»úÆ÷ÈË£¡\n";
+		cout<<"å·²åˆ›å»º";
+		if(t=='R')
+			cout<<"çº¢æ–¹";
+		else
+			cout<<"è“æ–¹";
+		cout<<n<<"å·";
+		switch(k)
+		{
+			case 'B':
+				cout<<"æ­¥å…µ";
+				break;
+			case 'S':
+				cout<<"å“¨å…µ";
+				break;
+			case 'Y':
+				cout<<"è‹±é›„";
+				break;
+			case 'G':
+				cout<<"å·¥ç¨‹";
+				break;
+		}
+		cout<<"æœºå™¨äººï¼\n";
 	}
 	void shoot(int n)
 	{
-		if(team='R')
-			cout<<"ºì·½";
-		else
-			cout<<"À¶·½";
-		cout<<number<<"ºÅ·¢Éä"<<n<<"·¢17mmµ¯Íè£¡Ôö¼Ó"<<n*15<<"µãÈÈÁ¿¡£\n";
-
-		cur_heat+=n*15;
-		if(cur_heat>s_gun)
+		int cost,radius;
+		if(kind=='B'||kind=='S')
 		{
-			cout<<"³¬³öÈÈÁ¿ÉÏÏÞ£¡"<<number<<"ºÅ»úÆ÷ÈËËÀÍö¡£\n";
+			cost=15;
+			radius=17;
+		}
+		else if(kind=='Y')
+		{
+			cost=30;
+			radius=42;
+		}
+		else
+		{
+			n=0;
+			cost=0;
+			radius=0;
+			cout<<"éžå¯å‘å°„å¼¹ä¸¸æœºç§ï¼\n";
+		}
+		if(team=='R')
+			cout<<"çº¢æ–¹";
+		else
+			cout<<"è“æ–¹";
+		cout<<number<<"å·";
+		switch(kind)
+		{
+			case 'B':
+				cout<<"æ­¥å…µ";
+				break;
+			case 'S':
+				cout<<"å“¨å…µ";
+				break;
+			case 'Y':
+				cout<<"è‹±é›„";
+				break;
+			case 'G':
+				cout<<"å·¥ç¨‹";
+				break;
+		}
+		cout<<"æœºå™¨äººå‘å°„"<<n<<"å‘"<<radius<<"mmå¼¹ä¸¸ï¼å¢žåŠ "<<n*cost<<"ç‚¹çƒ­é‡ã€‚\n";
+
+		cur_heat+=n*cost;
+		if(cur_heat>heat)
+		{
+			cout<<"è¶…å‡ºçƒ­é‡ä¸Šé™ï¼"<<number<<"å·å“¨å…µæœºå™¨äººæ­»äº¡ã€‚\n";
 			blood_vol=0;
 			die();
 		}
 	}
 	void attacked(int injure)
 	{
+		cout<<number<<"å·æœºå™¨äººå—åˆ°"<<injure<<"ç‚¹ä¼¤å®³ï¼\n";
 		blood_vol-=injure;
 		if(blood_vol<=0)
 		{
-			cout<<"ÑªÁ¿¹é0£¡"<<number<<"ºÅ»úÆ÷ÈËËÀÍö¡£\n";
+			cout<<"è¡€é‡å½’0ï¼"<<number<<"å·æœºå™¨äººæ­»äº¡ã€‚\n";
 			blood_vol=0;
 			die();
 		}
 	}
 	void die()
 	{
-		s_gun = 0;
+		cur_heat = 0;
 		dead_flag=true;
 	}
-};
-
-class S_robot:public Robot
-{
-protected:
-	int s_gun;
-	int cur_heat;
-public:
-	S_robot(int n,char t,int b=200,int s=300,int h=0):Robot(n,t,b),s_gun(s),cur_heat(h)
+	void show()
 	{
-		cout<<"ÒÑ´´½¨";
-		cout<<(t='R') ? "ºì·½":"À¶·½";
-		cout<<n<<"ºÅÉÚ±ø»úÆ÷ÈË£¡\n";
+
 	}
 };
 
-class Y_robot:public Robot
-{
-protected:
-	int l_gun;
-	int cur_heat;
-public:
-	Y_robot(int n,char t,int b=200,int l=300,int h=0):Robot(n,t,b),l_gun(l),cur_heat(h)
-	{
-		cout<<"ÒÑ´´½¨";
-		cout<<(t='R') ? "ºì·½":"À¶·½";
-		cout<<n<<"ºÅÓ¢ÐÛ»úÆ÷ÈË£¡\n";
-	}
-};
-
-class G_robot:public Robot
-{
-protected:
-	
-public:
-	G_robot(int n,char t,int b=200):Robot(n,t,b)
-	{
-		cout<<"ÒÑ´´½¨";
-		cout<<(t='R') ? "ºì·½":"À¶·½";
-		cout<<n<<"ºÅ¹¤³Ì»úÆ÷ÈË£¡\n";
-	}
-};
+//class B_robot:public Robot
+//{
+//public:
+//	B_robot(int n=0,char t='R',int b=100,int h=200,int ch=0,char k='B'):Robot(n,t,b,h,ch,k){}
+//	void shoot(int n)
+//	{
+//		if(team='R')
+//			cout<<"çº¢æ–¹";
+//		else
+//			cout<<"è“æ–¹";
+//		cout<<number<<"å·æ­¥å…µæœºå™¨äººå‘å°„"<<n<<"å‘17mmå¼¹ä¸¸ï¼å¢žåŠ "<<n*15<<"ç‚¹çƒ­é‡ã€‚\n";
+//
+//		cur_heat+=n*15;
+//		if(cur_heat>heat)
+//		{
+//			cout<<"è¶…å‡ºçƒ­é‡ä¸Šé™ï¼"<<number<<"å·æ­¥å…µæœºå™¨äººæ­»äº¡ã€‚\n";
+//			blood_vol=0;
+//			die();
+//		}
+//	}
+//};
+//
+//class S_robot:public Robot
+//{
+//public:
+//	S_robot(int n=0,char t='R',int b=200,int h=300,int ch=0,char k='S'):Robot(n,t,b,h,ch,k){}
+//	void shoot(int n)
+//	{
+//		if(team='R')
+//			cout<<"çº¢æ–¹";
+//		else
+//			cout<<"è“æ–¹";
+//		cout<<number<<"å·å“¨å…µæœºå™¨äººå‘å°„"<<n<<"å‘17mmå¼¹ä¸¸ï¼å¢žåŠ "<<n*15<<"ç‚¹çƒ­é‡ã€‚\n";
+//
+//		cur_heat+=n*15;
+//		if(cur_heat>heat)
+//		{
+//			cout<<"è¶…å‡ºçƒ­é‡ä¸Šé™ï¼"<<number<<"å·å“¨å…µæœºå™¨äººæ­»äº¡ã€‚\n";
+//			blood_vol=0;
+//			die();
+//		}
+//	}
+//};
+//
+//class Y_robot:public Robot
+//{
+//public:
+//	Y_robot(int n=0,char t='R',int b=200,int h=300,int ch=0,char k='Y'):Robot(n,t,b,h,ch,k){}
+//	void shoot(int n)
+//	{
+//		if(team='R')
+//			cout<<"çº¢æ–¹";
+//		else
+//			cout<<"è“æ–¹";
+//		cout<<number<<"å·è‹±é›„æœºå™¨äººå‘å°„"<<n<<"å‘42mmå¼¹ä¸¸ï¼å¢žåŠ "<<n*30<<"ç‚¹çƒ­é‡ã€‚\n";
+//
+//		cur_heat+=n*30;
+//		if(cur_heat>heat)
+//		{
+//			cout<<"è¶…å‡ºçƒ­é‡ä¸Šé™ï¼"<<number<<"å·è‹±é›„æœºå™¨äººæ­»äº¡ã€‚\n";
+//			blood_vol=0;
+//			die();
+//		}
+//	}
+//};
+//
+//class G_robot:public Robot
+//{
+//public:
+//	G_robot(int n=0,char t='R',int b=200,int h=0,int ch=0,char k='G'):Robot(n,t,b,h,ch,k){}
+//};
 
 class team
 {
 protected:
-	vector<B_robot> B_mem;
-	vector<S_robot> S_mem;
-	vector<Y_robot> Y_mem;
-	vector<G_robot> G_mem;
-	vector<Robot> mem;
-public:
-	void A_B(B_robot m)
-	{
-		B_mem.push_back(m);
-		mem.push_back(m);
-	}
-	void A_S(S_robot m)
-	{
-		S_mem.push_back(m);
-		mem.push_back(m);
-	}
-	void A_Y(Y_robot m)
-	{
-		Y_mem.push_back(m);
-		mem.push_back(m);
-	}
-	void A_G(G_robot m)
-	{
-		G_mem.push_back(m);
-		mem.push_back(m);
-	}
-	char rearch(int number)
-	{
-		vector<Robot>::iterator p = mem.begin();
-	    while(p!=mem.end()) 
-		{
-			if(p->number==number)
-				return p->team;
-		}
-	}
-}B,R;
-
-class Order
-{
-protected:
-
+	vector<Robot*> member;
 public:
 	void A(char team,char kind,unsigned int number)
 	{
-		if(team=='R')
-			switch(kind)
-			{
-				case 'B':
-					R.A_B(B_robot(number,team));
-					break;
-				case 'S':
-					R.A_S(S_robot(number,team));
-					break;
-				case 'Y':
-					R.A_Y(Y_robot(number,team));
-					break;
-				case 'G':
-					R.A_G(G_robot(number,team));
-					break;
-			}
-		else
-			switch(kind)
-			{
-				case 'B':
-					B.A_B(B_robot(number,team));
-					break;
-				case 'S':
-					B.A_S(S_robot(number,team));
-					break;
-				case 'Y':
-					B.A_Y(Y_robot(number,team));
-					break;
-				case 'G':
-					B.A_G(G_robot(number,team));
-					break;
-			}
+		int b,h;
+		switch(kind)
+		{
+			case 'B':
+				b=100;
+				h=200;
+				break;
+			case 'S':
+				b=200;
+				h=300;
+				break;
+			case 'Y':
+				b=200;
+				h=300;
+				break;
+			case 'G':
+				b=200;
+				h=0;
+				break;
+		}
+		Robot* p=new Robot(number,team,b,h,0,kind);
+		member.push_back(p);
 	}
 	void F(char team,int number,int injure)
 	{
-		if(team=='R')
-		{
-			switch()
-				R.F_B(number,injure);
-
-		}
+		vector<Robot*>::iterator p=member.begin();
+		for(;p!=member.end();p++)
+			if((*p)->number==number)
+			{
+				(*p)->attacked(injure);
+				break;
+			}
 	}
-	void H()
+	void H(char team,int number,int n)
 	{
-
+		vector<Robot*>::iterator p=member.begin();
+		for(;p!=member.end();p++)
+			if((*p)->number==number)
+			{
+				//cout<<(*p)->kind<<endl;
+				(*p)->shoot(n);
+				break;
+			}
 	}
-}
-
+}B,R;
 int main()
 {
 	ifstream infile;
 	infile.open("data.txt");
+	char order;
+	char team;
+	unsigned int number;
+	int bullet;
+	int injure;
+	char kind;
+	while(1)
+	{
+		while(!infile.eof())
+		{
+			infile>>order;
+			if(order=='A')
+			{
+				infile>>team;
+				if(team=='R')
+				{
+					infile>>kind>>number;
+					R.A(team,kind,number);
+				}
+				else
+				{
+					infile>>kind>>number;
+					B.A(team,kind,number);
+				}
+			}
+			else if(order=='F')
+			{
+				infile>>team;
+				if(team=='R')
+				{
+					infile>>number>>injure;
+					R.F(team,number,injure);
+				}
+				else
+				{
+					infile>>number>>injure;
+					B.F(team,number,injure);
+				}
+			}
+			else if(order=='H')
+			{
+				infile>>team;
+				if(team=='R')
+				{
+					infile>>number>>bullet;
+					R.H(team,number,bullet);
+				}
+				else
+				{
+					infile>>number>>bullet;
+					B.H(team,number,bullet);
+				}
+			}
+			else
+				return 0;
+		}
+	}
+
 	return 0;
 }
