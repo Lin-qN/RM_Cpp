@@ -5,6 +5,40 @@
 #include<cmath>
 #include<vector>
 using namespace std;
+#define width 12
+void judge_t(char team)
+{
+	if(team=='R')
+		cout<<"红方";
+	else
+		cout<<"蓝方";
+}
+void judge_k(char kind)
+{
+	switch(kind)
+	{
+		case 'B':
+			cout<<"步兵";
+			break;
+		case 'S':
+			cout<<"哨兵";
+			break;
+		case 'Y':
+			cout<<"英雄";
+			break;
+		case 'G':
+			cout<<"工程";
+			break;
+	}
+}
+void judge_life(bool dead_flag)
+{
+	if(dead_flag==0)
+		cout<<"存活\n";
+	else
+		cout<<"死亡\n";
+}
+
 class Robot
 {
 	friend class team;
@@ -52,6 +86,13 @@ public:
 	}
 	void shoot(int n)
 	{
+		if(dead_flag==1)
+		{
+			cout<<"无效操作，";
+			judge_t(team);
+			cout<<number<<"号机器人已阵亡！！\n";
+			return;
+		}
 		int cost,radius;
 		if(kind=='B'||kind=='S')
 		{
@@ -68,7 +109,9 @@ public:
 			n=0;
 			cost=0;
 			radius=0;
-			cout<<"非可发射弹丸机种！\n";
+			judge_t(team);
+			cout<<number<<"号机器人尝试射击，但其为非可发射弹丸机种！\n";
+			return;
 		}
 		if(team=='R')
 			cout<<"红方";
@@ -90,23 +133,35 @@ public:
 				cout<<"工程";
 				break;
 		}
-		cout<<"机器人发射"<<n<<"发"<<radius<<"mm弹丸！增加"<<n*cost<<"点热量。\n";
+		cout<<"机器人发射了"<<n<<"发"<<radius<<"mm弹丸！增加"<<n*cost<<"点热量。\n";
 
 		cur_heat+=n*cost;
 		if(cur_heat>heat)
 		{
-			cout<<"超出热量上限！"<<number<<"号哨兵机器人死亡。\n";
+			cout<<"超出热量上限！";
+			judge_t(team);
+			cout<<number<<"号哨兵机器人阵亡。\n";
 			blood_vol=0;
 			die();
 		}
 	}
 	void attacked(int injure)
 	{
+		if(dead_flag==1)
+		{
+			cout<<"无效操作，";
+			judge_t(team);
+			cout<<number<<"号机器人已阵亡！！\n";
+			return;
+		}
+		judge_t(team);
 		cout<<number<<"号机器人受到"<<injure<<"点伤害！\n";
 		blood_vol-=injure;
 		if(blood_vol<=0)
 		{
-			cout<<"血量归0！"<<number<<"号机器人死亡。\n";
+			cout<<"血量归0！";
+			judge_t(team);
+			cout<<number<<"号机器人阵亡。\n";
 			blood_vol=0;
 			die();
 		}
@@ -118,7 +173,16 @@ public:
 	}
 	void show()
 	{
-
+		cout<<setw(width);
+		judge_t(team);
+		cout<<setw(width)<<number;
+		cout<<setw(width);
+		judge_k(kind);
+		cout<<setw(width)<<blood_vol;
+		cout<<setw(width)<<cur_heat;
+		cout<<setw(width);
+		judge_life(dead_flag);
+		cout<<endl;
 	}
 };
 
@@ -231,8 +295,9 @@ public:
 			if((*p)->number==number)
 			{
 				(*p)->attacked(injure);
-				break;
+				return;
 			}
+		cout<<"查无此机器人！\n";
 	}
 	void H(char team,int number,int n)
 	{
@@ -242,8 +307,22 @@ public:
 			{
 				//cout<<(*p)->kind<<endl;
 				(*p)->shoot(n);
-				break;
+				return;
 			}
+		cout<<"查无此机器人！\n";
+	}
+	void show()
+	{
+		cout<<setw(width)<<"队伍";
+		cout<<setw(width)<<"编号";
+		cout<<setw(width)<<"机种";
+		cout<<setw(width)<<"血量";
+		cout<<setw(width)<<"热量";
+		cout<<setw(width)<<"存活状况";
+		cout<<endl<<"---------------------------------------------------------------------------\n";
+		vector<Robot*>::iterator p=member.begin();
+		for(;p!=member.end();p++)
+			(*p)->show();
 	}
 }B,R;
 int main()
@@ -304,7 +383,12 @@ int main()
 				}
 			}
 			else
+			{
+				cout<<"\n>>比赛结束<<\n";
+				B.show();
+				R.show();
 				return 0;
+			}
 		}
 	}
 
