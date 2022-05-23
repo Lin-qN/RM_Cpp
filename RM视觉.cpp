@@ -106,9 +106,6 @@ public:
 		}
 		else
 		{
-			n=0;
-			cost=0;
-			radius=0;
 			judge_t(team);
 			cout<<number<<"号机器人尝试射击，但其为非可发射弹丸机种！\n";
 			return;
@@ -385,7 +382,9 @@ int main()
 			else
 			{
 				cout<<"\n>>比赛结束<<\n";
+				cout<<">>蓝方机器人情况：\n";
 				B.show();
+				cout<<">>红方机器人情况：\n";
 				R.show();
 				return 0;
 			}
